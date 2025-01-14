@@ -2,6 +2,7 @@ import * as chrono from "npm:chrono-node@2.7.7";
 import { Signal } from "@preact/signals";
 
 export type Todo = {
+  id: string;
   start?: Date;
   end?: Date;
   text: string;
@@ -26,12 +27,16 @@ export default function DateInput(props: DateProps) {
 
           if (result) {
             props.todo.value = {
+              id: crypto.randomUUID(),
               start: result.start.date(),
               end: result.end?.date(),
               text: text.replace(result.text, ""),
             };
           } else {
-            props.todo.value = null;
+            props.todo.value = {
+              id: crypto.randomUUID(),
+              text: text,
+            };
           }
         }}
       >
