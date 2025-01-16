@@ -1,7 +1,7 @@
 import { Signal, useSignal } from "@preact/signals";
 import { Button } from "./Button.tsx";
 import DateInput, { Todo } from "./DateInput.tsx";
-import { T } from "../fresh.config.ts";
+import { T } from "../translations.ts";
 
 type AddTodoProps = {
     todos: Signal<Array<Todo>>;

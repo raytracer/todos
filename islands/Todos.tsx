@@ -4,7 +4,7 @@ import AddTodo from "../components/AddTodo.tsx";
 import { Todo } from "../components/DateInput.tsx";
 import TrashCan from "../components/TrashCan.tsx";
 import { startOfWeek, addWeeks, startOfDay, addDays } from "npm:date-fns@4.1.0";
-import { T } from "../fresh.config.ts";
+import { T } from "../translations.ts";
 
 const formatDate = (date: Date | undefined): string => {
     if (date) {
