@@ -15,12 +15,12 @@ type DateProps = {
 
 export default function DateInput(props: DateProps) {
   return (
-    <div class="flex gap-8 py-6">
+    <div class="w-full">
       <input
-        class={"p-2 rounded-md border-gray-200 border outline-none"}
+        class={"p-2 rounded-md border-gray-200 border outline-none w-full"}
         value={props.text}
         onInput={(e) => {
-          const text = (e.target as any).value as string;
+          const text = (e.target as HTMLInputElement).value as string;
           props.text.value = text;
           const results = chrono.de.parse(text);
           const result = results.length > 0 ? results[0] : undefined;
@@ -30,7 +30,7 @@ export default function DateInput(props: DateProps) {
               id: crypto.randomUUID(),
               start: result.start.date(),
               end: result.end?.date(),
-              text: text.replace(result.text, ""),
+              text: text.replace(result.text, "").trim(),
             };
           } else {
             props.todo.value = {

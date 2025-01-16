@@ -14,7 +14,7 @@ export default function AddTodo(props: AddTodoProps) {
     const addTodo = async (e: SubmitEvent) => {
         e.preventDefault();
 
-        if (currentTodo.value) {
+        if (currentTodo.value && currentTodo.value.text) {
             const newTodo = currentTodo.value;
             currentTodo.value = null;
             text.value = "";
@@ -30,8 +30,8 @@ export default function AddTodo(props: AddTodoProps) {
     };
 
     return (
-        <div class="flex gap-8 py-6">
-            <form onSubmit={addTodo}>
+        <div>
+            <form class="flex gap-8 py-6 items-center" onSubmit={addTodo}>
                 <DateInput text={text} todo={currentTodo} />
                 <Button>Add</Button>
             </form>

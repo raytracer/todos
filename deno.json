@@ -36,5 +36,5 @@
     "jsxImportSource": "preact"
   },
   "nodeModulesDir": "auto",
-  "unstable": ["kv"]
+  "unstable": ["kv", "cron"]
 }
