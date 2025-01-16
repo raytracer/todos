@@ -1,6 +1,7 @@
 import { Signal, useSignal } from "@preact/signals";
 import { Button } from "./Button.tsx";
 import DateInput, { Todo } from "./DateInput.tsx";
+import { T } from "../fresh.config.ts";
 
 type AddTodoProps = {
     todos: Signal<Array<Todo>>;
@@ -33,7 +34,7 @@ export default function AddTodo(props: AddTodoProps) {
         <div>
             <form class="flex gap-8 py-6 items-center" onSubmit={addTodo}>
                 <DateInput text={text} todo={currentTodo} />
-                <Button>Add</Button>
+                <Button>{T("ADD")}</Button>
             </form>
         </div>
     );

@@ -2,7 +2,44 @@ import { defineConfig } from "$fresh/server.ts";
 import tailwind from "$fresh/plugins/tailwind.ts";
 import ExpiryMap from "npm:expiry-map@2.0.0";
 import { Todo } from "./components/DateInput.tsx";
-import { Bot } from "https://deno.land/x/grammy/mod.ts";
+import { Bot } from "https://deno.land/x/grammy@v1.34.0/mod.ts";
+
+export const T = (key: keyof typeof TRANSLATIONS) => {
+  return TRANSLATIONS[key][L];
+}
+
+export const TRANSLATIONS = {
+  "ADD": {
+    "de": "Hinzufügen",
+    "en": "Add",
+  },
+  "INBOX": {
+    "de": "Inbox",
+    "en": "Inbox",
+  },
+  "TODAY": {
+    "de": "Heute",
+    "en": "Today",
+  },
+  "TOMORROW": {
+    "de": "Morgen",
+    "en": "Tomorrow",
+  },
+  "THIS_WEEK": {
+    "de": "Diese Woche",
+    "en": "This Week",
+  },
+  "NEXT_WEEK": {
+    "de": "Nächste Woche",
+    "en": "Next Week",
+  },
+  "LATER": {
+    "de": "Später",
+    "en": "Later",
+  },
+};
+
+export const L = "de";
 
 const oldTodos = new ExpiryMap<string, Todo>(1000 * 240);
 

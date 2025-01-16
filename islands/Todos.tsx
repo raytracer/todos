@@ -4,6 +4,7 @@ import AddTodo from "../components/AddTodo.tsx";
 import { Todo } from "../components/DateInput.tsx";
 import TrashCan from "../components/TrashCan.tsx";
 import { startOfWeek, addWeeks, startOfDay, addDays } from "npm:date-fns@4.1.0";
+import { T } from "../fresh.config.ts";
 
 const formatDate = (date: Date | undefined): string => {
     if (date) {
@@ -29,7 +30,7 @@ export default function Todos() {
         const res = await fetch("/api/todos/all");
         const data = await res.json();
         const transformed = data.map((todo: any) => {
-            return {...todo, start: todo.start === undefined ? undefined : new Date(todo.start), end: todo.end === undefined ? undefined : new Date(todo.end)};
+            return { ...todo, start: todo.start === undefined ? undefined : new Date(todo.start), end: todo.end === undefined ? undefined : new Date(todo.end) };
         });
         todos.value = transformed;
     }
@@ -41,7 +42,7 @@ export default function Todos() {
     const sortTodos = (todos: Array<Todo>) => {
         return todos.sort((a, b) => {
             if (a.start && b.start) {
-                const comparison =  a.start.getTime() - b.start.getTime();
+                const comparison = a.start.getTime() - b.start.getTime();
                 if (comparison === 0) {
                     return a.text.localeCompare(b.text);
                 } else {
@@ -71,44 +72,44 @@ export default function Todos() {
         rest = rest.filter(todo => !nextWeek.includes(todo));
         const later = rest.filter(todo => todo.start !== undefined && startOfDay(todo.start).getTime() > startOfDay(addWeeks(new Date(), 1)).getTime());
 
-        const groups: Array<{label: string, todos: Array<Todo>}> = [
-            { label: "Inbox", todos: inbox },
-            { label: "Today", todos: today },
-            { label: "Tomorrow", todos: tomorrow },
-            { label: "This Week", todos: thisWeek },
-            { label: "Next Week", todos: nextWeek },
-            { label: "Later", todos: later }
+        const groups: Array<{ label: string, todos: Array<Todo> }> = [
+            { label: T("INBOX"), todos: inbox },
+            { label: T("TODAY"), todos: today },
+            { label: T("TOMORROW"), todos: tomorrow },
+            { label: T("THIS_WEEK"), todos: thisWeek },
+            { label: T("NEXT_WEEK"), todos: nextWeek },
+            { label: T("LATER"), todos: later }
         ];
 
         return groups;
     }
 
     return (
-        <div>
+        <div class="w-full">
             <AddTodo loadTodos={loadTodos} todos={todos} />
-                {groupTodos(sortTodos(todos.value)).map(({label, todos}) => {
-                    return <div class="pb-4" key={label}>
-                        <h2 class="text-xl font-bold pb-2">{label}</h2>
-                        <ul>
-                            {todos.map((todo, index) => {
-                                const callback = async () => {
-                                    await fetch("/api/todos/delete", {
-                                        method: "POST",
-                                        body: JSON.stringify(todo.id)
-                                    });
-                                    loadTodos();
-                                };
+            {groupTodos(sortTodos(todos.value)).map(({ label, todos }) => {
+                return <div class="pb-4" key={label}>
+                    <h2 class="text-xl font-bold pb-2">{label}</h2>
+                    <ul>
+                        {todos.map((todo, index) => {
+                            const callback = async () => {
+                                await fetch("/api/todos/delete", {
+                                    method: "POST",
+                                    body: JSON.stringify(todo.id)
+                                });
+                                loadTodos();
+                            };
 
 
-                                return (
-                                    <li class="grid grid-cols-[1fr_auto_1fr]" key={index}>
-                                        <pre class="font-bold"><TrashCan callback={callback} /> {formatDate(todo.start)}</pre><span class="font-bold text-center px-3">:</span><span>{todo.text}</span>
-                                    </li>
-                                );
-                            })}
-                        </ul>
-                    </div>;
-                })}
+                            return (
+                                <li class="grid grid-cols-[1fr_auto_1fr]" key={index}>
+                                    <pre class="font-bold"><TrashCan callback={callback} /> {formatDate(todo.start)}</pre><span class="font-bold text-center px-3">:</span><span>{todo.text}</span>
+                                </li>
+                            );
+                        })}
+                    </ul>
+                </div>;
+            })}
         </div>
     );
 }
