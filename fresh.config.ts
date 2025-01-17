@@ -8,6 +8,8 @@ import { setMinutes } from "npm:date-fns@4.1.0/setMinutes";
 import { getMinutes } from "npm:date-fns@4.1.0/getMinutes";
 import { getHours } from "npm:date-fns@4.1.0/getHours";
 import { setHours } from "npm:date-fns@4.1.0/setHours";
+import { addDays } from "npm:date-fns@4.1.0/addDays";
+import { custom } from "./parser.ts";
 
 const oldTodos = new ExpiryMap<string, Todo>(1000 * 240);
 
@@ -15,6 +17,41 @@ const BOT_TOKEN = Deno.env.get("BOT_TOKEN");
 const CHAT_ID = Deno.env.get("CHAT_ID");
 
 const isBuildMode = Deno.args.includes("build");
+
+if (BOT_TOKEN) {
+  const bot = new Bot(BOT_TOKEN);
+  bot.command("start", (ctx) => ctx.reply("Es kann losgehen"));
+  bot.on("message", async (ctx) => {
+    const text = ctx.message.text;
+    console.log("i was here");
+    console.log(text);
+    if (text) {
+      const results = custom.parse(text);
+      const result = results.length > 0 ? results[0] : undefined;
+
+      let todo: Todo | undefined = undefined;
+
+      if (result) {
+        todo = {
+          id: crypto.randomUUID(),
+          start: result.start.date(),
+          end: result.end?.date(),
+          text: text.replace(result.text, "").trim(),
+        };
+      } else {
+        todo = {
+          id: crypto.randomUUID(),
+          text: text,
+        };
+      }
+
+      const kv = await Deno.openKv();
+      const key = ["todos", todo.id]
+      kv.set(key, todo);
+    }
+  });
+  bot.start();
+}
 
 if (!isBuildMode) {
   Deno.cron("notification cron", { minute: { every: 1 } }, async () => {
@@ -37,18 +74,20 @@ if (!isBuildMode) {
   Deno.cron("rollover cron", { minute: { every: 1 } }, async () => {
     const kv = await Deno.openKv();
     const iter = kv.list<Todo>({ prefix: ["todos"] });
+    const dayStart = startOfDay(new Date());
+
     for await (const res of iter) {
       if (res.value.start && res.value.end === undefined) {
         const parsedDate = new Date(res.value.start)
-        const dayStart = startOfDay(new Date());
-
-
-
         if (parsedDate < dayStart) {
           const newDate = setHours(setMinutes(dayStart, getMinutes(parsedDate)), getHours(parsedDate));
           const updatedTodo = { ...res.value, start: newDate };
           await kv.set(res.key, updatedTodo);
         }
+      } else {
+          const newDate = setHours(addDays(dayStart, 1), 10);
+          const updatedTodo = { ...res.value, start: newDate };
+          await kv.set(res.key, updatedTodo);
       }
     }
   });

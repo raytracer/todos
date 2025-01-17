@@ -81,7 +81,7 @@ export default function Todos() {
             { label: T("LATER"), todos: later }
         ];
 
-        return groups;
+        return groups.filter(g => g.todos.length > 0);
     }
 
     return (
