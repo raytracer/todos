@@ -23,8 +23,6 @@ if (BOT_TOKEN) {
   bot.command("start", (ctx) => ctx.reply("Es kann losgehen"));
   bot.on("message", async (ctx) => {
     const text = ctx.message.text;
-    console.log("i was here");
-    console.log(text);
     if (text) {
       const results = custom.parse(text);
       const result = results.length > 0 ? results[0] : undefined;
@@ -85,9 +83,9 @@ if (!isBuildMode) {
           await kv.set(res.key, updatedTodo);
         }
       } else {
-          const newDate = setHours(addDays(dayStart, 1), 10);
-          const updatedTodo = { ...res.value, start: newDate };
-          await kv.set(res.key, updatedTodo);
+        const newDate = setHours(addDays(dayStart, 1), 10);
+        const updatedTodo = { ...res.value, start: newDate };
+        await kv.set(res.key, updatedTodo);
       }
     }
   });
