@@ -5,6 +5,7 @@ WORKDIR /app
 COPY . .
 RUN rm -rf node_modules
 RUN deno cache --reload --allow-import main.ts
+RUN chmod -R 777 /app
 RUN deno task build
 
 USER deno
