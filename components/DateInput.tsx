@@ -25,7 +25,24 @@ export default function DateInput(props: DateProps) {
         onInput={(e) => {
           const text = (e.target as HTMLInputElement).value as string;
           props.text.value = text;
-          const results = chrono.de.parse(text);
+          const custom = chrono.de.casual.clone();
+          custom.parsers.push({
+            pattern: () => { return /\bfrüh\b/i },
+            extract: (context, match) => {
+              return {
+                hour: 8,
+              }
+            }
+          });
+          custom.parsers.push({
+            pattern: () => { return /\b(\d+)\.(\d+)\./i },
+            extract: (context, match) => {
+              const day = +match[1];
+              const month = +match[2];
+              return { day, month };
+            }
+          });
+          const results = custom.parse(text);
           const result = results.length > 0 ? results[0] : undefined;
 
           if (result) {

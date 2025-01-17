@@ -102,7 +102,7 @@ export default function Todos() {
 
 
                             return (
-                                <li class="grid grid-cols-[1fr_auto_1fr]" key={index}>
+                                <li class="grid grid-cols-[auto_auto_1fr]" key={index}>
                                     <pre class="font-bold"><TrashCan callback={callback} /> {formatDate(todo.start)}</pre><span class="font-bold text-center px-3">:</span><span>{todo.text}</span>
                                 </li>
                             );
