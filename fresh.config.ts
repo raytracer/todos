@@ -69,7 +69,7 @@ if (!isBuildMode) {
     }
   });
 
-  Deno.cron("rollover cron", { minute: { every: 1 } }, async () => {
+  Deno.cron("rollover cron", { hour: { every: 1 } }, async () => {
     const kv = await Deno.openKv();
     const iter = kv.list<Todo>({ prefix: ["todos"] });
     const dayStart = startOfDay(new Date());

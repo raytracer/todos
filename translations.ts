@@ -3,6 +3,10 @@ export const T = (key: keyof typeof TRANSLATIONS) => {
 }
 
 export const TRANSLATIONS = {
+    "LOADING": {
+        "de": "Lädt ...",
+        "en": "Loading ..."
+    },
     "PLACEHOLDER": {
         "de": "Heute muss ich ...",
         "en": "Today I have to ..."
