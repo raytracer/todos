@@ -48,7 +48,7 @@ if (BOT_TOKEN) {
       kv.set(key, todo);
     }
   });
-  bot.start();
+  // bot.start();
 }
 
 if (!isBuildMode) {
